@@ -9,7 +9,7 @@ coded UTF-8 characters + audio (if available).
 ## How to Roll
 To start rickrollin’ immediately:
 
-    curl -s -L https://raw.githubusercontent.com/4yman-0/rickroll.sh/main/roll.sh | bash`
+    curl -s -L https://raw.githubusercontent.com/4yman-0/rickroll.sh/main/roll | bash`
 
 Here is the clandestine command you can give to your friends 😈
 
@@ -23,7 +23,7 @@ Here is the clandestine command you can give to your friends 😈
 
 Nevertheless, for the enhanced experience, I highly recommend the following:
 
-    ./roll.sh inject
+    ./roll inject
 
 Which essentially just does:
 
