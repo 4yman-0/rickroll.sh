@@ -1,24 +1,25 @@
-# rickrollrc
-
+# rickroll.sh
 Bash script which [rickrolls](http://en.wikipedia.org/wiki/Rickrolling) your
 terminal by playing Rick Astley’s “Never Gonna Give You Up” with ANSI 256-color
 coded UTF-8 characters + audio (if available).
 
+![rickroll in xterm](http://i.imgur.com/ZAsQWtP.png)
+![rickroll in mac](http://i.imgur.com/yDLaZna.png)
+
 ## How to Roll
 To start rickrollin’ immediately:
 
-    curl -s -L https://raw.githubusercontent.com/keroserene/rickrollrc/master/roll.sh | bash
+    curl -s -L https://raw.githubusercontent.com/4yman-0/rickroll.sh/main/roll.sh | bash`
 
 Here is the clandestine command you can give to your friends 😈
 
     curl -s -L https://bit.ly/3zvELNz | bash
 
-![rickroll in xterm](http://i.imgur.com/ZAsQWtP.png)
-![rickroll in mac](http://i.imgur.com/yDLaZna.png)
-
-For the record: It is not actually a good idea to make a habit of
-
-    curl $(random_script_from_the_internets) | bash"
+>For the record: It is not actually a good idea to make a habit of
+>
+>```bash
+>    curl $(random_script_from_the_internets) | bash"
+>```
 
 Nevertheless, for the enhanced experience, I highly recommend the following:
 
@@ -30,7 +31,7 @@ Which essentially just does:
 
 For a salutary lesson in the importance of taking care what you
 execute in your terminal, inspired by the classic
-[sl](http://www.tkl.iis.u-tokyo.ac.jp/~toyoda/index_e.html), save the
+<a href="https://github.com/mtoyoda/sl"><code>sl</code></a> , save the
 command in a shell script called `suod` somewhere on your `PATH`. It’s
 recommended to download the script for faster startup, to avoid
 spoiling the surprise when you accidentally execute it for the nth
