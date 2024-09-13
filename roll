@@ -55,24 +55,30 @@ gimme() {
 }
 echo -en "\x1b[?25l \x1b[2J \x1b[H"  # Hide cursor, clear screen.
 
+# Fetch video before playing audio
+[ -f /tmp/roll.bz2 ] || gimme $video >/tmp/roll.bz2
+
 #echo -e "${yell}Fetching audio..."
 if has? afplay; then
   # On Mac OS, if |afplay| available, pre-fetch compressed audio.
   [ -f /tmp/roll.s16 ] || gimme $audio_raw >/tmp/roll.s16
   afplay /tmp/roll.s16 &
+
 elif has? aplay; then
   # On Linux, if |aplay| available, stream raw sound.
-  gimme $audio_raw | aplay -Dplug:default -q -f S16_LE -r 8000 &
+  [ -f /tmp/roll.s16 ] || gimme $audio_raw >/tmp/roll.s16
+  aplay -Dplug:default -q -f S16_LE -r 8000 /tmp/roll.s16 &
+
 elif has? play; then
   # On Cygwin, if |play| is available (via sox), pre-fetch compressed audio.
-  gimme $audio_gsm >/tmp/roll.gsm.wav
+  [ -f /tmp/roll.gsm.wav ] || gimme $audio_gsm >/tmp/roll.gsm.wav
   play -q /tmp/roll.gsm.wav &
 fi
 audpid=$!
 
 #echo -e "${yell}Fetching video..."
-# Sync FPS to reality as best as possible. Mac's freebsd version of date dosen't
-# have nanoseconds so inject python. :/
+# Sync FPS to reality as best as possible. Mac's FreeBSD version of date dosen't
+# have nanoseconds so inject python.
 python <(cat <<EOF
 import sys
 import time
@@ -94,4 +100,4 @@ try:
 except KeyboardInterrupt:
   pass
 EOF
-) < <(gimme $video | bunzip2 -q 2> /dev/null)
+) < <(bunzip2 /tmp/roll.bz2 -dc -q 2)
