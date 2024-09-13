@@ -9,13 +9,13 @@ coded UTF-8 characters + audio (if available).
 ## How to Roll
 To start rickrollin’ immediately:
 
-    curl -s -L https://raw.githubusercontent.com/4yman-0/rickroll.sh/main/roll | bash`
+    curl -sL https://raw.githubusercontent.com/4yman-0/rickroll.sh/main/roll | bash`
 
 Here is the clandestine command you can give to your friends 😈
 
-    curl -s -L https://bit.ly/3zvELNz | bash
+    curl -sL https://bit.ly/3zvELNz | bash
 
->For the record: It is not actually a good idea to make a habit of
+>For the record: It is not a good idea to make a habit of
 >
 >```bash
 >    curl $(random_script_from_the_internets) | bash"
@@ -40,7 +40,6 @@ security, in case we are demonically possessed to replace `roll.sh`
 with something evil).
 
 ## Misc.
-
 This has been tested on Arch, Debian, Ubuntu, Mac and Cygwin (so far).
 To enable sound in Cygwin, install the **sox** package.
 
