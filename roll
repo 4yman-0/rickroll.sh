@@ -1,33 +1,49 @@
-#!/bin/env bash
+#!/usr/bin/bash
+
 # Rick Astley in your Terminal.
 # By Serene and Justine Tunney <3
-version='1.2.1'
+# 4yman-0's fork
+
+version='0.12'
 rick='https://keroserene.net/lol'
 video="$rick/astley80.full.bz2"
-# TODO: Get gsm going again :)
 audio_gsm="$rick/roll.gsm"
 audio_raw="$rick/roll.s16"
 audpid=0
-NEVER_GONNA='curl -s -L http://bit.ly/10hA8iC | bash'
-MAKE_YOU_CRY="$HOME/.bashrc"
+
 red='\x1b[38;5;9m'
 yell='\x1b[38;5;216m'
 green='\x1b[38;5;10m'
 purp='\x1b[38;5;171m'
-echo -en '\x1b[s'  # Save cursor.
 
-has?() { hash $1 2>/dev/null; }
-cleanup() { (( audpid > 1 )) && kill $audpid 2>/dev/null; }
-quit() { echo -e "\x1b[2J \x1b[0H ${purp}<3 \x1b[?25h \x1b[u \x1b[m"; }
+# helper functions
+has (){ command -v $1 &> /dev/null; }
+cleanup (){ (( audpid > 1 )) && kill $audpid 2>/dev/null; }
+quit (){ echo -e "\x1b[2J \x1b[0H ${purp}<3 \x1b[?25h \x1b[u \x1b[m"; }
 
-usage () {
+# Run quit/cleanup after getting INT/EXIT
+trap 'cleanup' INT
+trap 'quit' EXIT
+
+usage (){
 echo -en "\
 ${green}Rick Astley performs ♪ Never Gonna Give You Up ♪ on STDOUT. $purp[v$version]
-${yell}Usage: ./astley.sh [OPTIONS...]
-${purp}OPTIONS : $yell
+${yell}Usage: ./roll [OPTIONS...]
+${purp}OPTIONS: $yell
   help   - Show this message.
   inject - Append to $purp$USER$yell's bashrc. (Recommended :D)\
 "
+}
+
+inject (){
+  local NEVER_GONNA='curl -s -L http://bit.ly/10hA8iC | bash'
+  local MAKE_YOU_CRY="$HOME/.bashrc"
+
+  echo -en "$red[Inject] "
+  echo $NEVER_GONNA >> $MAKE_YOU_CRY
+  echo -e "${green}Appended to $MAKE_YOU_CRY."
+  echo -en "${yell}If you've Astley overdosed, "
+  echo -e "delete the line $purp\"$NEVER_GONNA\"$yell."
 }
 
 case "$@" in
@@ -35,48 +51,58 @@ case "$@" in
     usage
     exit;;
   inject)
-    echo -en "$red[Inject] "
-    echo $NEVER_GONNA >> $MAKE_YOU_CRY
-    echo -e "${green}Appended to $MAKE_YOU_CRY. <3"
-    echo -en "${yell}If you've Astley overdosed, "
-    echo -e "delete the line ${purp}\"$NEVER_GONNA\"${yell}."
+    inject
     exit;;
 esac
 
-trap "cleanup" INT
-trap "quit" EXIT
-
 # Bean streamin' - agnostic to curl or wget availability.
 gimme() {
-  if has? curl; then curl -s $1
-  elif has? wget; then wget -q -O - $1
-  else echo "Cannot has internets. :(" && exit
+  if has curl; then curl -s $1
+  elif has wget; then wget -q -O - $1
+  else echo "Cannot has internets. :("; exit
   fi
 }
-echo -en "\x1b[?25l \x1b[2J \x1b[H"  # Hide cursor, clear screen.
 
-#echo -e "${yell}Fetching audio..."
-if has? afplay; then
-  # On Mac OS, if |afplay| available, pre-fetch compressed audio.
-  [ -f /tmp/roll.s16 ] || gimme $audio_raw >/tmp/roll.s16
-  afplay /tmp/roll.s16 &
-elif has? aplay; then
-  # On Linux, if |aplay| available, stream raw sound.
-  gimme $audio_raw | aplay -Dplug:default -q -f S16_LE -r 8000 &
-elif has? play; then
-  # On Cygwin, if |play| is available (via sox), pre-fetch compressed audio.
-  gimme $audio_gsm >/tmp/roll.gsm.wav
-  play -q /tmp/roll.gsm.wav &
-fi
-audpid=$!
+get_video (){
+  echo -e "${yell}Give me video"
+  [ -f /tmp/roll.bz2 ] || gimme $video >/tmp/roll.bz2
+}
 
-#echo -e "${yell}Fetching video..."
-# Sync FPS to reality as best as possible. Mac's freebsd version of date dosen't
-# have nanoseconds so inject python. :/
-python <(cat <<EOF
+get_audio (){
+  echo -e "${yell}Give me audio"
+  if has afplay || has aplay; then
+    [ -f /tmp/roll.s16 ] || gimme $audio_raw >/tmp/roll.s16
+  elif has play; then
+    [ -f /tmp/roll.gsm.wav ] || gimme $audio_gsm >/tmp/roll.gsm.wav
+  fi
+}
+
+play_audio (){
+  if has afplay; then
+    # On Mac OS, if `afplay` available, pre-fetch compressed audio.
+    afplay /tmp/roll.s16 &
+
+  elif has aplay; then
+    # On Linux, if `aplay` available, stream raw sound.
+    aplay -q -f S16_LE -r 16000 /tmp/roll.s16 &
+
+  elif has play; then
+    # On Cygwin, if `play` is available (via sox), play compressed audio.
+    play -q /tmp/roll.gsm.wav &
+  fi
+
+  audpid=$!
+}
+
+play_video (){
+  echo -e "${yell}Rick Astley!"
+  # Sync FPS to reality as best as possible. MacOS's FreeBSD version of `date` dosen't
+  # have nanoseconds so inject python/python3
+  PY=python; has python3 && PY=python3
+  $PY <(cat <<EOF
 import sys
 import time
-fps = 25; time_per_frame = 1.0 / fps
+fps = 28; time_per_frame = 1.0 / fps
 buf = ''; frame = 0; next_frame = 0
 begin = time.time()
 try:
@@ -94,4 +120,12 @@ try:
 except KeyboardInterrupt:
   pass
 EOF
-) < <(gimme $video | bunzip2 -q 2> /dev/null)
+  ) < <(bunzip2 /tmp/roll.bz2 -dc -q 2)
+}
+
+# echo -en '\x1b[s'  # Save cursor.
+echo -en "\x1b[?25l \x1b[2J \x1b[H" # Hide cursor, clear screen.
+get_video
+get_audio
+play_audio
+play_video
