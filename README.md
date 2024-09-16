@@ -9,11 +9,15 @@ coded UTF-8 characters + audio (if available).
 ## How to Roll
 To start rickrollin’ immediately:
 
-    curl -sL https://raw.githubusercontent.com/4yman-0/rickroll.sh/main/roll | bash`
+```bash
+    curl -sL https://raw.githubusercontent.com/4yman-0/rickroll.sh/main/roll | bash
+```
 
 Here is the clandestine command you can give to your friends 😈
 
+```bash
     curl -sL https://bit.ly/3zvELNz | bash
+```
 
 >For the record: It is not a good idea to make a habit of
 >
