@@ -83,7 +83,7 @@ echo -e "${yell}Rick Astley!"
 # have nanoseconds so inject python.
 # See if python or python3 exist
 PY=python
-[ ! has? python ] && PY=python3
+if has? python3; then PY=python3; fi
 $PY <(cat <<EOF
 import sys
 import time
