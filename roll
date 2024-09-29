@@ -18,7 +18,7 @@ purp='\x1b[38;5;171m'
 
 # helper functions
 has (){ command -v $1 &> /dev/null; }
-cleanup (){ (( audpid > 1 )) && kill $audpid 2>/dev/null; }
+cleanup (){ (( audpid > 1 )) && kill $audpid &>/dev/null; }
 quit (){ echo -e "\x1b[2J \x1b[0H ${purp}<3 \x1b[?25h \x1b[u \x1b[m"; }
 
 # Run quit/cleanup after getting INT/EXIT
@@ -55,31 +55,36 @@ case "$@" in
     exit;;
 esac
 
-# Bean streamin' - agnostic to curl or wget availability.
-gimme() {
-  if has curl; then curl -s $1
-  elif has wget; then wget -q -O - $1
+# agnostic to curl or wget availability.
+grab (){
+  if has curl; then curl -s $1 -o $2
+  elif has wget; then wget -q $1 -O $2
   else echo "Cannot has internets. :("; exit
   fi
 }
 
+# gimme https://example.org /tmp/example
+gimme (){
+  [ -f $2 ] || grab $1 $2
+}
+
 get_video (){
-  echo -e "${yell}Give me video"
-  [ -f /tmp/roll.bz2 ] || gimme $video >/tmp/roll.bz2
+#  echo -e "${yell}Give me video"
+  gimme $video /tmp/roll.bz2
 }
 
 get_audio (){
-  echo -e "${yell}Give me audio"
+#  echo -e "${yell}Give me audio"
   if has afplay || has aplay; then
-    [ -f /tmp/roll.s16 ] || gimme $audio_raw >/tmp/roll.s16
+    gimme $audio_raw /tmp/roll.s16
   elif has play; then
-    [ -f /tmp/roll.gsm.wav ] || gimme $audio_gsm >/tmp/roll.gsm.wav
+    gimme $audio_gsm /tmp/roll.gsm.wav
   fi
 }
 
 play_audio (){
   if has afplay; then
-    # On Mac OS, if `afplay` available, pre-fetch compressed audio.
+    # On Mac OS, if `afplay` available, play compressed audio.
     afplay /tmp/roll.s16 &
 
   elif has aplay; then
@@ -123,9 +128,9 @@ EOF
   ) < <(bunzip2 /tmp/roll.bz2 -dc -q 2)
 }
 
-# echo -en '\x1b[s'  # Save cursor.
-echo -en "\x1b[?25l \x1b[2J \x1b[H" # Hide cursor, clear screen.
 get_video
 get_audio
 play_audio
+
+echo -en "\x1b[?25l \x1b[2J \x1b[H" # Hide cursor, clear screen.
 play_video
