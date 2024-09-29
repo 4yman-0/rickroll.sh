@@ -55,31 +55,36 @@ case "$@" in
     exit;;
 esac
 
-# Bean streamin' - agnostic to curl or wget availability.
-gimme() {
+# agnostic to curl or wget availability.
+grab (){
   if has curl; then curl -s $1
   elif has wget; then wget -q -O - $1
   else echo "Cannot has internets. :("; exit
   fi
 }
 
+# gimme https://example.org /tmp/example
+gimme (){
+  [ -f $2 ] || grab $1 >$2
+}
+
 get_video (){
-  echo -e "${yell}Give me video"
-  [ -f /tmp/roll.bz2 ] || gimme $video >/tmp/roll.bz2
+#  echo -e "${yell}Give me video"
+  gimme $video /tmp/roll.bz2
 }
 
 get_audio (){
-  echo -e "${yell}Give me audio"
+#  echo -e "${yell}Give me audio"
   if has afplay || has aplay; then
-    [ -f /tmp/roll.s16 ] || gimme $audio_raw >/tmp/roll.s16
+    gimme $audio_raw /tmp/roll.s16
   elif has play; then
-    [ -f /tmp/roll.gsm.wav ] || gimme $audio_gsm >/tmp/roll.gsm.wav
+    gimme $audio_gsm /tmp/roll.gsm.wav
   fi
 }
 
 play_audio (){
   if has afplay; then
-    # On Mac OS, if `afplay` available, pre-fetch compressed audio.
+    # On Mac OS, if `afplay` available, play compressed audio.
     afplay /tmp/roll.s16 &
 
   elif has aplay; then
