@@ -1,7 +1,21 @@
 #!/usr/bin/bash
 
-# Rick Astley in your Terminal.
-# By Serene and Justine Tunney <3
+# rickroll.sh: Rick Astley in your terminal.
+# Copyright (C) 2024 Serene and Justine Tunney
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 # 4yman-0's fork
 
 version='0.12'
@@ -32,7 +46,7 @@ ${purp}OPTIONS: $yell
 }
 
 inject (){
-  local NEVER_GONNA='curl -s -L http://bit.ly/10hA8iC | bash'
+  local NEVER_GONNA='curl -s -L https://bit.ly/10hA8iC | bash'
   local MAKE_YOU_CRY="$HOME/.bashrc"
 
   echo -en "$red[Inject] "
@@ -81,24 +95,25 @@ get_audio (){
 play_audio (){
   if has afplay; then
     # On Mac OS, if `afplay` available, play compressed audio.
-    afplay /tmp/roll.s16 &
+    afplay /tmp/roll.s16 &>/dev/null &
 
   elif has aplay; then
     # On Linux, if `aplay` available, stream raw sound.
-    aplay -q -f S16_LE -r 16000 /tmp/roll.s16 &
+    aplay -q -f S16_LE -r 16000 /tmp/roll.s16 &>/dev/null &
 
   elif has play; then
     # On Cygwin, if `play` is available (via sox), play compressed audio.
-    play -q /tmp/roll.gsm.wav &
+    play -q /tmp/roll.gsm.wav &>/dev/null &
   fi
 
   audpid=$!
 }
 
 play_video (){
+  echo -en "\x1b[?25l \x1b[2J \x1b[H" # Hide cursor, clear screen.
   echo -e "${yell}Rick Astley!"
-  # Sync FPS to reality as best as possible. MacOS's FreeBSD version of `date` dosen't
-  # have nanoseconds so inject python/python3
+  # Sync FPS to REALITY as best as possible. MacOS's FreeBSD version of `date` dosen't
+  # have nanoseconds so inject python
   PY=python; has python3 && PY=python3
   $PY <(cat <<EOF
 import sys
@@ -131,6 +146,4 @@ trap 'quit' EXIT
 get_video
 get_audio
 play_audio
-
-echo -en "\x1b[?25l \x1b[2J \x1b[H" # Hide cursor, clear screen.
 play_video

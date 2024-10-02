@@ -65,6 +65,4 @@ like:
 >Please see our sister project: [hiptext](https://github.com/jart/hiptext), which
 >generates ANSI color codes for any image or video.
 >
-><3,
->
 >~serene ([@kiserene](http://twitter.com/kiserene))
