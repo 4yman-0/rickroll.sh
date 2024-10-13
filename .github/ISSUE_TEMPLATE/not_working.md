@@ -8,22 +8,18 @@ assignees: ''
 ---
 
 **Checklist**
-[ ] Never gonna give you up.
-[ ] Never gonna make you cry.
-
+ - [ ] Never gonna give you up.
+ - [ ] Never gonna make you cry.
 
 **Steps to make Astley look sad**
 1. Open '...'
 2. Run `roll`
 3. 'etc...'
 
-**Expected behavior**
-Description of what is expected to happen.
-
 **Screenshots**
-If applicable, add screenshots to help explain your problem.
+Add screenshots to help explain your problem.
 
-**Device/Browser information:**
+**Device/OS information:**
  - OS: [e.g. Cygwin, Linux]
  - Terminal: [e.g. xterm]
 
