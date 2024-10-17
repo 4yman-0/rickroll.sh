@@ -1,10 +1,7 @@
 # rickroll.sh
-BASH script which [rickrolls](http://en.wikipedia.org/wiki/Rickrolling) your
-terminal by playing Rick Astley’s “Never Gonna Give You Up” with ANSI 256-color
-coded UTF-8 characters and audio (if available).
-
-![rickroll in xterm](http://i.imgur.com/ZAsQWtP.png)
-![rickroll in mac](http://i.imgur.com/yDLaZna.png)
+BASH script which [rickrolls](http://en.wikipedia.org/wiki/Rickrolling) the terminal by
+playing Rick Astley’s “Never Gonna Give You Up” with ANSI 256-color coded UTF-8
+characters and audio (if available).
 
 ## How to Roll
 To start rickrollin’ immediately:
@@ -36,16 +33,18 @@ Nevertheless, for the enhanced experience, I highly recommend the following:
 
 Which essentially just does:
 
+```bash
     echo "curl -s -L http://bit.ly/10hA8iC | bash" >> ~/.bashrc
+```
 
 >For a salutary lesson in the importance of taking care what you
 execute in your terminal, inspired by the classic
 <a href="https://github.com/mtoyoda/sl"><code>sl</code></a> , save the
-command in a shell script called `suod` somewhere on your `PATH`. It’s
+command in a shell script somewhere on your `PATH`. It’s
 recommended to download the script for faster startup, to avoid
-spoiling the surprise when you accidentally execute it for the nth
+spoiling the surprise when you accidentally execute it for the `n`th
 time (and also, unless you really like living dangerously, for
-security, in case we are demonically possessed to replace `roll.sh`
+security, in case we are possessed to replace `roll`
 with something evil).
 
 ## Misc.
@@ -55,14 +54,15 @@ To enable sound in Cygwin, install the **sox** package.
 Since this is a colorful hobby, you need to ensure 256-color mode is enabled or
 Astley will look sad.
 
-For example, if you use GNU screen, ensure your ~/.screenrc contains something
-like:
-
-    termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
-    defbce "on"
+>For example, if you use GNU screen, ensure your ~/.screenrc contains something
+>like:
+>```bash
+>    termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+>    defbce "on"
+>```
 
 >Kudos to jart for our lovely hiptext shenanigans.
 >Please see our sister project: [hiptext](https://github.com/jart/hiptext), which
 >generates ANSI color codes for any image or video.
 >
->~serene ([@kiserene](http://twitter.com/kiserene))
+> ~ serene ([@kiserene](http://twitter.com/kiserene))
