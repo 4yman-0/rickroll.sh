@@ -33,7 +33,7 @@ purp='\x1b[38;5;171m'
 # helper functions
 has (){ command -v $1 &> /dev/null; }
 cleanup (){ (( audpid > 1 )) && kill $audpid &>/dev/null; }
-quit (){ echo -e "\x1b[2J \x1b[0H ${purp}<3 \x1b[?25h \x1b[u \x1b[m"; }
+quit (){ echo -e "\x1b[?1049l ${purp}<3 \x1b[?25h \x1b[m"; }
 
 usage (){
 echo -en "\
@@ -110,7 +110,7 @@ play_audio (){
 }
 
 play_video (){
-  echo -en "\x1b[?25l \x1b[2J \x1b[H" # Hide cursor, clear screen.
+  echo -en "\x1b[?25l \x1b[?1049h \x1b[H" # Hide cursor, clear screen.
   echo -e "${yell}Rick Astley!"
   # Sync FPS to REALITY as best as possible. MacOS's FreeBSD version of `date` dosen't
   # have nanoseconds so inject python
@@ -118,14 +118,14 @@ play_video (){
   $PY <(cat <<EOF
 import sys
 import time
-fps = 28; time_per_frame = 1.0 / fps
+fps = 25; time_per_frame = 1.0 / fps
 buf = ''; frame = 0; next_frame = 0
 begin = time.time()
 try:
   for i, line in enumerate(sys.stdin):
-    if i % 32 == 0:
+    if i % 30== 0:
       frame += 1
-      sys.stdout.write(buf); buf = ''
+      sys.stdout.write(buf); buf = '\x1b[H'
       elapsed = time.time() - begin
       repose = (frame * time_per_frame) - elapsed
       if repose > 0.0:

@@ -7,34 +7,34 @@ characters and audio (if available).
 To start rickrollin’ immediately:
 
 ```bash
-    curl -sL https://raw.githubusercontent.com/4yman-0/rickroll.sh/main/roll | bash
+curl -sL https://raw.githubusercontent.com/4yman-0/rickroll.sh/main/roll | bash
 ```
 
 Here is the clandestine command you can give to your friends 😈
 
 ```bash
-    curl -sL https://bit.ly/3zvELNz | bash
+curl -sL https://bit.ly/3zvELNz | bash
 ```
 
 >For the record: It is not a good idea to make a habit of
 >
 >```bash
->    curl $(random_script_from_the_internets) | bash"
+>curl $(random_script_from_the_internets) | bash"
 >```
 
 Nevertheless, for the enhanced experience, I highly recommend the following:
 
 ```bash
-    wget https://raw.githubusercontent.com/4yman-0/rickroll.sh/main/roll
-    chmod +x roll
+wget https://raw.githubusercontent.com/4yman-0/rickroll.sh/main/roll
+chmod +x roll
 
-    ./roll inject
+./roll inject
 ```
 
 Which essentially just does:
 
 ```bash
-    echo "curl -s -L http://bit.ly/10hA8iC | bash" >> ~/.bashrc
+echo "curl -s -L http://bit.ly/10hA8iC | bash" >> ~/.bashrc
 ```
 
 >For a salutary lesson in the importance of taking care what you
@@ -57,8 +57,8 @@ Astley will look sad.
 >For example, if you use GNU screen, ensure your ~/.screenrc contains something
 >like:
 >```bash
->    termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
->    defbce "on"
+>termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+>defbce "on"
 >```
 
 >Kudos to jart for our lovely hiptext shenanigans.
