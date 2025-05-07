@@ -18,9 +18,9 @@
 
 # 4yman-0's fork
 
-version='0.12'
-rick='https://keroserene.net/lol'
-video="$rick/astley80.full.bz2"
+version='0.2'
+rick='https://raw.githubusercontent.com/4yman-0/rickroll.sh/main/rick'
+video="$rick/roll.bz2"
 audio_gsm="$rick/roll.gsm"
 audio_raw="$rick/roll.s16"
 audpid=0
